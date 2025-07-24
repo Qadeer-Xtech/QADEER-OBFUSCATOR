@@ -112,7 +112,10 @@ obfuscateBtn.addEventListener('click', () => {
     try {
         const selectedOptions = levels[securitySlider.value].options;
         const obfuscatedResult = window.JavaScriptObfuscator.obfuscate(codeToObfuscate, selectedOptions);
-        outputCode.value = `// Obfuscated with [${levels[securitySlider.value].label}] settings.\n` + obfuscatedResult.getObfuscatedCode();
+        
+        // <<< YAHAN TABDEELI KI GAYI HAI >>>
+        outputCode.value = 'Obfuscated By Qadeer Khan\n' + obfuscatedResult.getObfuscatedCode();
+
     } catch (error) {
         outputCode.value = 'Error: ' + error.message;
     }
