@@ -1,5 +1,5 @@
 // ====================================================================
-// QADEER Obfuscator Script
+// QADEER Obfuscator Script - FINAL FIXED VERSION
 // ====================================================================
 
 // --- Get references to all the HTML elements ---
@@ -19,8 +19,12 @@ const htmlObfuscateBtn = document.getElementById('htmlObfuscateBtn');
 // --- Define the obfuscation options for each security level ---
 const levels = {
     '2': { label: 'MEDIUM', options: { compact: true, controlFlowFlattening: true, controlFlowFlatteningThreshold: 0.5, deadCodeInjection: true, deadCodeInjectionThreshold: 0.2, stringArray: true, stringArrayThreshold: 0.7, transformObjectKeys: true, unicodeEscapeSequence: false } },
-    '3': { label: 'ADVANCED', options: { compact: true, controlFlowFlattening: true, controlFlowFlatteningThreshold: 1, deadCodeInjection: true, deadCodeInjectionThreshold: 1, stringArray: true, stringArrayThreshold: 1, stringArrayEncoding: ['base64'], stringArrayWrappersCount: 4, transformObjectKeys: true, renameGlobals: true, identifierNamesGenerator: 'hexadecimal', splitStrings: true, selfDefending: true } },
-    '4': { label: 'HARD-ADV', options: { compact: true, controlFlowFlattening: true, controlFlowFlatteningThreshold: 1, deadCodeInjection: true, deadCodeInjectionThreshold: 1, disableConsoleOutput: true, renameGlobals: true, selfDefending: true, stringArray: true, stringArrayEncoding: ['rc4'], stringArrayThreshold: 1, stringArrayWrappersCount: 5, stringArrayWrappersChained: true, stringArrayWrappersType: 'function', splitStrings: true, splitStringsChunkLength: 2, transformObjectKeys: true, identifierNamesGenerator: 'hexadecimal' } },
+    '3': { label: 'ADVANCED', options: { compact: true, controlFlowFlattening: true, controlFlowFlatteningThreshold: 1, deadCodeInjection: true, deadCodeInjectionThreshold: 1, stringArray: true, stringArrayThreshold: 1, stringArrayEncoding: ['base64'], stringArrayWrappersCount: 4, transformObjectKeys: true, renameGlobals: false, identifierNamesGenerator: 'hexadecimal', splitStrings: true, selfDefending: true } },
+    '4': { label: 'HARD-ADV', options: { compact: true, controlFlowFlattening: true, controlFlowFlatteningThreshold: 1, deadCodeInjection: true, deadCodeInjectionThreshold: 1, disableConsoleOutput: true, renameGlobals: false, selfDefending: true, stringArray: true, stringArrayEncoding: ['rc4'], stringArrayThreshold: 1, stringArrayWrappersCount: 5, stringArrayWrappersChained: true, stringArrayWrappersType: 'function', splitStrings: true, splitStringsChunkLength: 2, transformObjectKeys: true, identifierNamesGenerator: 'hexadecimal' } },
+    
+    // <<< QADEER'S WORK LEVEL KO STABLE KIYA GAYA HAI >>>
+    // 'renameGlobals' ko false kar diya taake code break na ho
+    // 'debugProtectionInterval' ko kam aggressive kiya taake error na aaye
     '5': {
         label: "QADEER'S WORK",
         options: {
@@ -30,12 +34,12 @@ const levels = {
             deadCodeInjection: true,
             deadCodeInjectionThreshold: 1,
             debugProtection: true,          
-            debugProtectionInterval: true,
+            debugProtectionInterval: 2000, // Changed from 'true' to 2000ms for stability
             disableConsoleOutput: true,
             identifierNamesGenerator: 'mangled-shuffled',
             log: false,
             numbersToExpressions: true,
-            renameGlobals: true,
+            renameGlobals: false, // CRITICAL FIX: Set to false to prevent breaking scripts
             selfDefending: true,
             stringArray: true,
             stringArrayEncoding: ['rc4'],
@@ -67,6 +71,7 @@ securitySlider.addEventListener('input', () => {
     updateDots(level);
 });
 
+// <<< JS OBFUSCATOR BUTTON LOGIC >>>
 obfuscateBtn.addEventListener('click', () => {
     const codeToObfuscate = inputCode.value;
     if (!codeToObfuscate.trim()) {
@@ -76,30 +81,37 @@ obfuscateBtn.addEventListener('click', () => {
     try {
         const selectedOptions = levels[securitySlider.value].options;
         const obfuscatedResult = window.JavaScriptObfuscator.obfuscate(codeToObfuscate, selectedOptions);
-        outputCode.value = '// Obfuscated By Qadeer Khan\n// https://github.com/Qadeer-Xtech\n' + obfuscatedResult.getObfuscatedCode();
+        
+        // Output ke liye alag category/header
+        outputCode.value = '// Obfuscated by Qadeer Khan (JS)\n// https://github.com/Qadeer-Xtech\n' + obfuscatedResult.getObfuscatedCode();
     } catch (error) {
-        outputCode.value = 'Error: ' + error.message;
+        outputCode.value = `Error during JS Obfuscation:\n\n${error.message}\n\nThis might be because the selected security level is too high for this specific script. Try a lower level.`;
     }
 });
 
-// <<< --- HTML OBFUSCATOR BUTTON KA CODE FIX KIYA GAYA --- >>>
+// <<< HTML OBFUSCATOR BUTTON LOGIC (FIXED) >>>
 htmlObfuscateBtn.addEventListener('click', () => {
-    const htmlToObfuscate = inputCode.value;
-    if (!htmlToObfuscate.trim()) {
+    const codeToProcess = inputCode.value;
+    if (!codeToProcess.trim()) {
         outputCode.value = "// Please write or paste your HTML code first.";
         return;
     }
-    try {
-        // Step 1: HTML code ko JavaScript string mein convert karo
-        const jsString = `document.write(${JSON.stringify(htmlToObfuscate)});`;
 
-        // Step 2: HTML ko load karne ke liye aik special, safe aur powerful setting istemal karo
-        // Yahan se 'debugProtection' aur 'selfDefending' hata diya hai taake browser mein error na aaye
+    // <<< FIX: Check if the input is actually HTML >>>
+    const isHtml = /<\/?[a-z][\s\S]*>/i.test(codeToProcess);
+    if (!isHtml) {
+        outputCode.value = "// This doesn't look like HTML code.\n// Please enter only HTML code to use the HTML Obfuscator.";
+        return;
+    }
+
+    try {
+        const jsString = `document.write(${JSON.stringify(codeToProcess)});`;
+
         const htmlLoaderOptions = {
             compact: true,
             controlFlowFlattening: true,
             deadCodeInjection: true,
-            renameGlobals: true,
+            renameGlobals: false,
             stringArray: true,
             stringArrayEncoding: ['rc4'],
             stringArrayThreshold: 1,
@@ -110,11 +122,10 @@ htmlObfuscateBtn.addEventListener('click', () => {
             splitStrings: true
         };
 
-        // Step 3: JavaScript string ko new 'htmlLoaderOptions' se obfuscate karo
         const obfuscatedJs = window.JavaScriptObfuscator.obfuscate(jsString, htmlLoaderOptions).getObfuscatedCode();
 
-        // Step 4: Final protected HTML file tayar karo
-        const finalHtml = `\n<script>${obfuscatedJs}</script>`;
+        // Output ke liye alag category/header (HTML comment)
+        const finalHtml = `\n\n<script>${obfuscatedJs}</script>`;
         
         outputCode.value = finalHtml;
 
@@ -122,7 +133,8 @@ htmlObfuscateBtn.addEventListener('click', () => {
         outputCode.value = 'HTML Obfuscation Error: ' + error.message;
     }
 });
-// <<< --- FIX ENDS HERE --- >>>
+
+// --- Utility Buttons and File Logic ---
 
 copyBtn.addEventListener('click', () => {
     outputCode.select();
@@ -138,7 +150,6 @@ downloadBtn.addEventListener('click', () => {
     URL.revokeObjectURL(link.href);
 });
 
-// --- File Upload Logic ---
 uploadBtn.addEventListener('click', () => {
     fileInput.click();
 });
