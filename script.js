@@ -1,5 +1,5 @@
 // ====================================================================
-// QADEER Obfuscator Script - FINAL CORRECTED VERSION
+// QADEER Obfuscator Script - JavaScript Only Version
 // ====================================================================
 
 // --- Get references to all the HTML elements ---
@@ -14,7 +14,7 @@ const dots = document.querySelectorAll('.dot');
 const uploadBtn = document.getElementById('uploadBtn');
 const fileInput = document.getElementById('fileInput');
 const uploadProgress = document.getElementById('uploadProgress');
-const htmlObfuscateBtn = document.getElementById('htmlObfuscateBtn');
+// <<< HTML Button reference removed >>>
 
 // --- Define the obfuscation options for each security level ---
 const levels = {
@@ -53,13 +53,7 @@ const levels = {
     }
 };
 
-// <<< --- NEW HELPER FUNCTION TO DETECT HTML --- >>>
-// Yeh function check karta hai ke code HTML hai ya nahi.
-function isLikelyHtml(code) {
-    const trimmedCode = code.trim().toLowerCase();
-    // HTML ke khaas tags (<!doctype, <html>, <body>) ko check karta hai.
-    return trimmedCode.includes('<!doctype') || trimmedCode.includes('<html>') || trimmedCode.includes('<body>');
-}
+// <<< HTML detection function removed >>>
 
 // --- Event Listeners ---
 
@@ -75,7 +69,7 @@ securitySlider.addEventListener('input', () => {
     updateDots(level);
 });
 
-// <<< JS OBFUSCATOR BUTTON LOGIC (WITH NEW CHECK) >>>
+// <<< JS OBFUSCATOR BUTTON LOGIC (Simplified) >>>
 obfuscateBtn.addEventListener('click', () => {
     const codeToObfuscate = inputCode.value;
     if (!codeToObfuscate.trim()) {
@@ -83,47 +77,18 @@ obfuscateBtn.addEventListener('click', () => {
         return;
     }
 
-    // <<< FIX: Agar code HTML jaisa lage to error do >>>
-    if (isLikelyHtml(codeToObfuscate)) {
-        outputCode.value = "// This looks like HTML code.\n// Please use the 'HTML Obfuscator' button for HTML.";
-        return;
-    }
+    // <<< HTML check removed >>>
 
     try {
         const selectedOptions = levels[securitySlider.value].options;
         const obfuscatedResult = window.JavaScriptObfuscator.obfuscate(codeToObfuscate, selectedOptions);
-        outputCode.value = '// Obfuscated by Qadeer Khan (JS)\n// https://github.com/Qadeer-Xtech\n' + obfuscatedResult.getObfuscatedCode();
+        outputCode.value = '// Obfuscated by Qadeer Khan\n// https://github.com/Qadeer-Xtech\n' + obfuscatedResult.getObfuscatedCode();
     } catch (error) {
         outputCode.value = `Error during JS Obfuscation:\n\n${error.message}\n\nThis might be because the selected security level is too high for this specific script. Try a lower level.`;
     }
 });
 
-// <<< HTML OBFUSCATOR BUTTON LOGIC (WITH NEW CHECK) >>>
-htmlObfuscateBtn.addEventListener('click', () => {
-    const codeToProcess = inputCode.value;
-    if (!codeToProcess.trim()) {
-        outputCode.value = "// Please write or paste your HTML code first.";
-        return;
-    }
-
-    // <<< FIX: Agar code HTML jaisa NA lage to error do >>>
-    if (!isLikelyHtml(codeToProcess)) {
-        outputCode.value = "// This does not look like HTML code.\n// Please use the 'JS Obfuscator' button for JavaScript.";
-        return;
-    }
-
-    try {
-        const jsString = `document.write(${JSON.stringify(codeToProcess)});`;
-        const htmlLoaderOptions = {
-            compact: true, controlFlowFlattening: true, deadCodeInjection: true, renameGlobals: false, stringArray: true, stringArrayEncoding: ['rc4'], stringArrayThreshold: 1, unicodeEscapeSequence: true, stringArrayWrappersCount: 3, stringArrayWrappersChained: true, identifierNamesGenerator: 'hexadecimal', splitStrings: true
-        };
-        const obfuscatedJs = window.JavaScriptObfuscator.obfuscate(jsString, htmlLoaderOptions).getObfuscatedCode();
-        const finalHtml = `\n\n<script>${obfuscatedJs}</script>`;
-        outputCode.value = finalHtml;
-    } catch (error) {
-        outputCode.value = 'HTML Obfuscation Error: ' + error.message;
-    }
-});
+// <<< HTML Button logic completely removed >>>
 
 // --- Utility Buttons and File Logic ---
 
@@ -133,10 +98,10 @@ copyBtn.addEventListener('click', () => {
 });
 
 downloadBtn.addEventListener('click', () => {
-    const blob = new Blob([outputCode.value], { type: 'text/html' });
+    const blob = new Blob([outputCode.value], { type: 'application/javascript' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
-    link.download = 'qadeer-protected-file.html';
+    link.download = 'qadeer-obfuscated-script.js';
     link.click();
     URL.revokeObjectURL(link.href);
 });
