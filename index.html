@@ -4,27 +4,291 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>QADEER MAX SECURITY Obfuscator</title>
-  <link rel="stylesheet" href="style.css"/>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/javascript-obfuscator/dist/index.browser.js"></script>
   <style>
-    /* --- Added CSS for Icon Resizing --- */
-    .footer-icon {
-      width: 50px;  /* Set icon width to 50px */
-      height: 50px; /* Set icon height to 50px */
+    /* --- Global Styles & Reset --- */
+    :root {
+      --primary-color: #007bff;
+      --secondary-color: #6c757d;
+      --background-color: #f0f2f5;
+      --box-background: #ffffff;
+      --text-color: #333;
+      --border-color: #dee2e6;
+      --success-color: #28a745;
+      --light-text: #6c757d;
+      --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      --border-radius: 12px;
     }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Montserrat', sans-serif;
+      background-color: var(--background-color);
+      color: var(--text-color);
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    /* --- Header --- */
+    .header-gradient {
+      background: linear-gradient(90deg, #1a237e, #007bff);
+      color: white;
+      text-align: center;
+      padding: 1.5rem 1rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .main-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+    }
+
+    /* --- Main Content --- */
+    main {
+      flex: 1; /* Allows main to grow and fill available space */
+      display: flex;
+      justify-content: center;
+      align-items: flex-start; /* Align boxes to the top */
+      gap: 2rem;
+      padding: 2rem 1rem;
+      width: 100%;
+    }
+
+    /* --- Content Boxes --- */
+    .box {
+      background: var(--box-background);
+      padding: 2rem;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      width: 100%;
+      max-width: 600px; /* Max width for each box */
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      border-bottom: 2px solid var(--border-color);
+      padding-bottom: 0.75rem;
+    }
+
+    .icon {
+      font-size: 1.8rem;
+    }
+
+    /* --- Code Areas --- */
+    .code-area {
+      width: 100%;
+      min-height: 300px;
+      padding: 1rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      font-family: monospace;
+      font-size: 1rem;
+      resize: vertical;
+      background-color: #f8f9fa;
+    }
+
+    .code-area.readonly {
+      background-color: #e9ecef;
+      cursor: not-allowed;
+    }
+
+    /* --- Security Slider --- */
+    .slider-row {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
+    .security-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 500;
+    }
+
+    .level-badge {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: 16px;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 8px;
+      background: var(--border-color);
+      border-radius: 5px;
+      outline: none;
+      opacity: 0.7;
+      transition: opacity .2s;
+    }
+    input[type="range"]:hover {
+      opacity: 1;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      background: var(--primary-color);
+      border-radius: 50%;
+      cursor: pointer;
+    }
+    input[type="range"]::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      background: var(--primary-color);
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    .level-desc {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.8rem;
+        color: var(--light-text);
+        padding: 0 5px;
+    }
+
+    /* --- Buttons and Inputs --- */
+    .main-actions, .output-btn-row, .download-row {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .js-btn, .secondary-btn {
+      flex-grow: 1;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+    }
+
+    .js-btn {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    .js-btn:hover {
+      background-color: #0056b3;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+    
+    .secondary-btn {
+      background-color: #f8f9fa;
+      color: var(--text-color);
+      border: 1px solid var(--border-color);
+    }
+    .secondary-btn:hover {
+      background-color: #e9ecef;
+    }
+
+    .filename-input {
+      flex-grow: 1;
+      padding: 0.75rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+
+    /* --- Footer --- */
+    footer {
+      background: #fff;
+      text-align: center;
+      padding: 1.5rem 1rem;
+      border-top: 1px solid var(--border-color);
+      width: 100%;
+      margin-top: auto; /* Push footer to the bottom */
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 1rem;
+    }
+
     .footer-btn {
       display: flex;
-      align-items: center; /* Vertically align icon and text */
-      gap: 8px; /* Add space between icon and text */
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: var(--text-color);
+      font-weight: 500;
+      transition: color 0.2s;
     }
-    /* --- End of Added CSS --- */
+    .footer-btn:hover {
+      color: var(--primary-color);
+    }
+
+    .footer-icon {
+      width: 32px;
+      height: 32px;
+    }
+
+    .copyright {
+      font-size: 0.9rem;
+      color: var(--light-text);
+    }
+    
+    /* Hide file input */
+    #fileInput {
+      display: none;
+    }
+    
+    /* --- Responsive Design --- */
+    @media (max-width: 992px) {
+      main {
+        flex-direction: column;
+        align-items: center; /* Center boxes vertically */
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .main-title {
+        font-size: 2rem;
+      }
+      .main-actions, .download-row {
+          flex-direction: column;
+      }
+    }
+
   </style>
 </head>
 <body>
-  <div class="header-gradient">
+  <header class="header-gradient">
     <h1 class="main-title">QADEER MAX SECURITY</h1>
-  </div>
+  </header>
+  
   <main>
     <section class="box">
       <h2 class="section-title"><span class="icon">💻</span> Input JavaScript Code</h2>
@@ -36,33 +300,28 @@
           <span id="levelValue" class="level-badge">ADVANCED</span>
         </div>
         <input type="range" id="securitySlider" min="1" max="3" value="1" />
+        <div class="level-desc">
+          <span>Advanced</span>
+          <span>Hard-Adv</span>
+          <span>QADEER-LOCK</span>
+        </div>
       </div>
       
-      <div class="level-desc">
-        <span class="dot active"></span>
-        <span class="dot"></span>
-        <span class="dot"></span>
-        <span>Advanced</span>
-        <span style="flex:1"></span>
-        <span>Hard-Adv</span>
-        <span style="flex:1"></span>
-        <span>QADEER-LOCK</span>
-      </div>
-
       <div class="main-actions">
         <button id="uploadBtn" class="secondary-btn">Upload File</button>
         <button id="obfuscateBtn" class="js-btn">🛡️ Protect My Code</button>
       </div>
       
-      <input type="file" id="fileInput" accept=".js,.txt" style="display: none;" />
+      <input type="file" id="fileInput" accept=".js,.txt" />
       
       <div id="uploadProgress" class="upload-status" style="display: none;"></div>
-
     </section>
 
     <section class="box">
       <h2 class="section-title"><span class="icon">🔒</span> Protected Code Output</h2>
       
+      <textarea id="outputCode" class="code-area readonly" readonly placeholder="Your protected JavaScript code will appear here..."></textarea>
+
       <div class="output-btn-row">
         <button id="copyBtn" class="secondary-btn">Copy Code</button>
       </div>
@@ -71,25 +330,24 @@
           <input type="text" id="fileNameInput" class="filename-input" placeholder="protected-script.js" />
           <button id="downloadBtn" class="secondary-btn">Download File</button>
       </div>
-
-      <textarea id="outputCode" class="code-area readonly" readonly placeholder="Your protected JavaScript code will appear here..."></textarea>
     </section>
   </main>
+
   <footer>
     <div class="footer-links">
       <a href="https://github.com/Qadeer-Xtech" class="footer-btn" target="_blank" rel="noopener">
         <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" alt="GitHub" class="footer-icon"/>
-        GitHub
+        <span>GitHub</span>
       </a>
       <a href="https://whatsapp.com/channel/0029Vaw6yRaBPzjZPtVtA80A" class="footer-btn" target="_blank" rel="noopener">
         <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" class="footer-icon"/>
-        WhatsApp Channel
+        <span>WhatsApp Channel</span>
       </a>
     </div>
     <p class="copyright">
       © 2025 Qadeer Obfuscation. All rights reserved.
     </p>
   </footer>
-  <script src="script.js"></script>
-</body>
+
+  <script src="script.js"></script> </body>
 </html>
