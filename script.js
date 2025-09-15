@@ -17,7 +17,7 @@ const fileNameInput = document.getElementById('fileNameInput');
 const advancedOptions = {
     compact: true,
     controlFlowFlattening: true,
-    deadCodeInjection: false, 
+    deadCodeInjection: false,
     debugProtection: false,
     disableConsoleOutput: true,
     identifierNamesGenerator: 'hexadecimal',
@@ -25,7 +25,7 @@ const advancedOptions = {
     renameGlobals: false,
     selfDefending: true,
     stringArray: true,
-    stringArrayEncoding: ['base64'], 
+    stringArrayEncoding: ['base64'],
     stringArrayThreshold: 0.75,
     stringArrayRotate: true,
 };
@@ -36,7 +36,7 @@ const hardAdvOptions = {
     controlFlowFlattening: true,
     controlFlowFlatteningThreshold: 0.75,
     deadCodeInjection: false,
-    debugProtection: true, 
+    debugProtection: true,
     debugProtectionInterval: 2000,
     disableConsoleOutput: true,
     identifierNamesGenerator: 'mangled-shuffled',
@@ -53,48 +53,46 @@ const hardAdvOptions = {
     transformObjectKeys: true,
 };
 
-// Level 3: QADEER-LOCK (EXTREME Multi-Layer Security)
-// WARNING: Is level se code ka size barh sakta hai, lekin security na-qabil-e-yaqeen had tak mazboot hogi.
-const qadeerMaxOptions = {
-    // Layer 1: Domain Lock (Apni website ka naam likhein)
-    // Yeh script sirf aapki di hui websites par chalegi, kahin aur copy karne par kaam nahi karegi.
-    domainLock: ['https://Your-Website.com', 'www.Your-Website.com'],
-    domainLockRedirectUrl: 'about:blank', // Ghalat domain par user ko yahan bhej dega
-
-    // Layer 2: Self Defending & Debug Protection
-    // Code ko format karne ya kholne ki koshish karne par usay crash kar deta hai.
+// Level 3: QADEER-LOCK-ULTRA (EXTREME AI-Proof Security) 🔒
+// WARNING: Is level se code ka size bohot barh jaye ga, lekin security na-qabil-e-yaqeen had tak mazboot hogi.
+const qadeerUltraOptions = {
+    // Layer 1: Anti-Tampering & Debugging
+    // Code ko kholne, format karne ya "DevTools" mein dekhne ki koshish karne par
+    // browser ko hang kar dega ya crash kar dega.
     selfDefending: true,
     debugProtection: true,
-    debugProtectionInterval: 4000,
+    debugProtectionInterval: 0, // 0 = Infinite loop on debug
 
-    // Layer 3: Control Flow & Dead Code Injection
-    // Code ke asal logic ko hazaron fuzool code blocks ke andar chupa deta hai.
+    // Layer 2: Logic Obfuscation
+    // Code ke asal logic ko hazaron be-matlab code blocks aur
+    // uljhay hue raaston (control flow) ke andar chupa deta hai.
     controlFlowFlattening: true,
-    controlFlowFlatteningThreshold: 1,
+    controlFlowFlatteningThreshold: 1, // Max Power
     deadCodeInjection: true,
-    deadCodeInjectionThreshold: 1,
+    deadCodeInjectionThreshold: 1, // Max Power
 
-    // Layer 4: Advanced String & Object Obfuscation
-    // Tamam text (strings) ko encrypt karke ek aesi jaga rakh deta hai jahan se unhe samajhna na-mumkin hota hai.
+    // Layer 3: Unreadable Code Generation
+    // Tamam text, variables, aur numbers ko aesi shaklon mein tabdeel kar deta hai jinhe parhna na-mumkin ho.
     stringArray: true,
     stringArrayEncoding: ['rc4'], // Strongest encoding
     stringArrayThreshold: 1,
     stringArrayRotate: true,
-    stringArrayWrappersCount: 15, // Wrappers ki tadad bohot ziada
-    stringArrayWrappersParametersMaxCount: 15,
+    stringArrayWrappersCount: 30,         // Bohat zyada wrappers
+    stringArrayWrappersParametersMaxCount: 30,
     stringArrayWrappersChained: true,
     stringArrayWrappersType: 'function',
     transformObjectKeys: true,
     splitStrings: true,
-    splitStringsChunkLength: 2, // Strings ko chotay tukron mein torta hai
+    splitStringsChunkLength: 2,
+    unicodeEscapeSequence: true, // Sab kuch unicode mein badal dega (bohot powerful)
 
-    // Layer 5: Variable & Number Obfuscation
+    // Layer 4: Variable & Number Obfuscation
     // Tamam variable names ko badal deta hai aur numbers ko mushkil hisaabi formulas mein tabdeel kar deta hai.
-    identifierNamesGenerator: 'mangled-shuffled',
-    renameGlobals: true, // Sab se powerful option
+    identifierNamesGenerator: 'mangled-shuffled', // Hardest name generator
+    renameGlobals: true, // ⚠️ WARNING: Sab se powerful lekin code break kar sakta hai agar ग़ਲਤ istemal ho.
     numbersToExpressions: true,
 
-    // Layer 6: General Settings
+    // Layer 5: General Settings
     compact: true,
     disableConsoleOutput: true,
     log: false,
@@ -104,9 +102,18 @@ const qadeerMaxOptions = {
 
 // Structure to hold all levels
 const levels = {
-    '1': { label: 'ADVANCED', options: advancedOptions },
-    '2': { label: 'HARD-ADV', options: hardAdvOptions },
-    '3': { label: 'QADEER-LOCK', options: qadeerMaxOptions }
+    '1': {
+        label: 'ADVANCED',
+        options: advancedOptions
+    },
+    '2': {
+        label: 'HARD-ADV',
+        options: hardAdvOptions
+    },
+    '3': {
+        label: 'QADEER-LOCK-ULTRA',
+        options: qadeerUltraOptions
+    }
 };
 
 // --- Functions ---
@@ -128,36 +135,18 @@ function obfuscateCode() {
         const selectedLevel = securitySlider.value;
         const currentOptions = levels[selectedLevel].options;
 
-        // Agar user Qadeer-Lock select kare, to usay domain lock ke baray mein inform karein
-        if (selectedLevel === '3' && currentOptions.domainLock && currentOptions.domainLock.includes('https://Your-Website.com')) {
-             const userDomains = prompt(
-                "QADEER-LOCK SECURITY:\n" +
-                "Yeh script sirf un websites par chalegi jin ka naam aap yahan likhenge.\n" +
-                "Apni website ke naam likhein (e.g., mywebsite.com, another.net).\n" +
-                "Agar multiple hain to comma (,) daal kar likhein.",
-                "my-app.com"
-            );
-
-            if (userDomains) {
-                // User ke input se domains ki list banayein
-                const domainList = userDomains.split(',').map(d => d.trim());
-                // Options mein user ke domains set karein
-                currentOptions.domainLock = domainList;
-            } else {
-                // Agar user cancel kar de, to obfuscation rokein
-                outputCode.value = "// Domain Lock canceled. Obfuscation stopped.";
-                return;
-            }
-        }
-        
         const obfuscationResult = JavaScriptObfuscator.obfuscate(code, currentOptions);
-        
+
         const now = new Date();
-        const dateTimeString = now.toLocaleString('en-PK', { timeZone: 'Asia/Karachi', dateStyle: 'full', timeStyle: 'long' });
+        const dateTimeString = now.toLocaleString('en-PK', {
+            timeZone: 'Asia/Karachi',
+            dateStyle: 'full',
+            timeStyle: 'long'
+        });
         const header = `// By Qadeer khan\n// Protected on: ${dateTimeString}\n// Security Level: ${levels[selectedLevel].label}\n// --- \n`;
-        
+
         outputCode.value = header + obfuscationResult.getObfuscatedCode();
-        
+
     } catch (error) {
         outputCode.value = `Error during JS Obfuscation:\n\n${error.message}\n\nThis might be because the selected security level is too high for this specific script. Try a lower level.`;
     }
@@ -210,7 +199,7 @@ securitySlider.addEventListener('input', () => {
 obfuscateBtn.addEventListener('click', obfuscateCode);
 
 copyBtn.addEventListener('click', () => {
-    if(outputCode.value && !outputCode.value.startsWith("// Please write")){
+    if (outputCode.value && !outputCode.value.startsWith("// Please write")) {
         outputCode.select();
         document.execCommand('copy');
     }
@@ -221,7 +210,7 @@ downloadBtn.addEventListener('click', () => {
         alert("There is no protected code to download. Please obfuscate your code first.");
         return;
     }
-    
+
     let filename = fileNameInput.value.trim();
     if (filename === '') {
         filename = 'protected-script.js';
@@ -231,7 +220,9 @@ downloadBtn.addEventListener('click', () => {
         filename += '.js';
     }
 
-    const blob = new Blob([outputCode.value], { type: 'application/javascript' });
+    const blob = new Blob([outputCode.value], {
+        type: 'application/javascript'
+    });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
     a.download = filename;
@@ -243,4 +234,3 @@ downloadBtn.addEventListener('click', () => {
 
 uploadBtn.addEventListener('click', () => fileInput.click());
 fileInput.addEventListener('change', handleFileSelect);
-
