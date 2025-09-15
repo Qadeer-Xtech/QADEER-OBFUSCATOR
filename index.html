@@ -49,10 +49,16 @@
 
     <section class="box">
       <h2 class="section-title"><span class="icon">🔒</span> Protected Code Output</h2>
+      
       <div class="output-btn-row">
         <button id="copyBtn" class="secondary-btn">Copy Code</button>
-        <button id="downloadBtn" class="secondary-btn">Download File</button>
       </div>
+
+      <div class="download-row">
+          <input type="text" id="fileNameInput" class="filename-input" placeholder="protected-script.js" />
+          <button id="downloadBtn" class="secondary-btn">Download File</button>
+      </div>
+
       <textarea id="outputCode" class="code-area readonly" readonly placeholder="Your protected JavaScript code will appear here..."></textarea>
     </section>
   </main>
