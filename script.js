@@ -9,16 +9,15 @@ const dots = document.querySelectorAll('.dot');
 const uploadBtn = document.getElementById('uploadBtn');
 const fileInput = document.getElementById('fileInput');
 const uploadProgress = document.getElementById('uploadProgress');
+const fileNameInput = document.getElementById('fileNameInput');
 
-// --- Obfuscation Options for Each Security Level (Updated for Compact & Hard Security) ---
+// --- Obfuscation Options ---
 
 // Level 1: ADVANCED (Compact & Strong)
-// Yeh Fuzool code (dead code) nahi daalta, is liye output chota rehta hai.
 const advancedOptions = {
     compact: true,
     controlFlowFlattening: true,
-    controlFlowFlatteningThreshold: 0.75,
-    deadCodeInjection: false, // Output size kam karne ke liye isko band kar diya hai
+    deadCodeInjection: false, 
     debugProtection: false,
     disableConsoleOutput: true,
     identifierNamesGenerator: 'hexadecimal',
@@ -26,19 +25,18 @@ const advancedOptions = {
     renameGlobals: false,
     selfDefending: true,
     stringArray: true,
-    stringArrayEncoding: ['base64'], // base64 encoding thori compact hoti hai
+    stringArrayEncoding: ['base64'], 
     stringArrayThreshold: 0.75,
     stringArrayRotate: true,
 };
 
 // Level 2: HARD-ADV (Very Strong & Compact)
-// Is main debug protection on hai taake koi code ko aasani se analyze na kar sakay.
 const hardAdvOptions = {
     compact: true,
     controlFlowFlattening: true,
     controlFlowFlatteningThreshold: 0.75,
     deadCodeInjection: false,
-    debugProtection: true, // Debugging rokne ke liye
+    debugProtection: true, 
     debugProtectionInterval: 2000,
     disableConsoleOutput: true,
     identifierNamesGenerator: 'mangled-shuffled',
@@ -46,7 +44,7 @@ const hardAdvOptions = {
     renameGlobals: false,
     selfDefending: true,
     stringArray: true,
-    stringArrayEncoding: ['rc4'], // rc4 ziada secure hai
+    stringArrayEncoding: ['rc4'],
     stringArrayThreshold: 1,
     stringArrayRotate: true,
     stringArrayWrappersCount: 2,
@@ -55,33 +53,52 @@ const hardAdvOptions = {
     transformObjectKeys: true,
 };
 
-// Level 3: QADEER-LOCK (Maximum Compact Security)
-// Yeh global variables ko bhi rename kar deta hai jis se code samajhna na-mumkin ho jata hai.
-// WARNING: Yeh option kuch codes ko break kar sakta hai agar wo HTML se interact kar rahe hon.
+// Level 3: QADEER-LOCK (EXTREME Multi-Layer Security)
+// WARNING: Is level se code ka size barh sakta hai, lekin security na-qabil-e-yaqeen had tak mazboot hogi.
 const qadeerMaxOptions = {
-    compact: true,
-    controlFlowFlattening: true,
-    controlFlowFlatteningThreshold: 1,
-    deadCodeInjection: false,
+    // Layer 1: Domain Lock (Apni website ka naam likhein)
+    // Yeh script sirf aapki di hui websites par chalegi, kahin aur copy karne par kaam nahi karegi.
+    domainLock: ['https://Your-Website.com', 'www.Your-Website.com'],
+    domainLockRedirectUrl: 'about:blank', // Ghalat domain par user ko yahan bhej dega
+
+    // Layer 2: Self Defending & Debug Protection
+    // Code ko format karne ya kholne ki koshish karne par usay crash kar deta hai.
+    selfDefending: true,
     debugProtection: true,
     debugProtectionInterval: 4000,
-    disableConsoleOutput: true,
-    identifierNamesGenerator: 'mangled',
-    log: false,
-    renameGlobals: true, // Sab se powerful option, lekin risky ho sakta hai
-    selfDefending: true,
+
+    // Layer 3: Control Flow & Dead Code Injection
+    // Code ke asal logic ko hazaron fuzool code blocks ke andar chupa deta hai.
+    controlFlowFlattening: true,
+    controlFlowFlatteningThreshold: 1,
+    deadCodeInjection: true,
+    deadCodeInjectionThreshold: 1,
+
+    // Layer 4: Advanced String & Object Obfuscation
+    // Tamam text (strings) ko encrypt karke ek aesi jaga rakh deta hai jahan se unhe samajhna na-mumkin hota hai.
     stringArray: true,
-    stringArrayEncoding: ['rc4'],
+    stringArrayEncoding: ['rc4'], // Strongest encoding
     stringArrayThreshold: 1,
     stringArrayRotate: true,
-    stringArrayWrappersCount: 5,
-    stringArrayWrappersParametersMaxCount: 5,
+    stringArrayWrappersCount: 15, // Wrappers ki tadad bohot ziada
+    stringArrayWrappersParametersMaxCount: 15,
     stringArrayWrappersChained: true,
     stringArrayWrappersType: 'function',
-    splitStrings: true,
-    splitStringsChunkLength: 5, // Strings ko chotay hisson mein torta hai
     transformObjectKeys: true,
-    unicodeEscapeSequence: false, // Size kam rakhta hai
+    splitStrings: true,
+    splitStringsChunkLength: 2, // Strings ko chotay tukron mein torta hai
+
+    // Layer 5: Variable & Number Obfuscation
+    // Tamam variable names ko badal deta hai aur numbers ko mushkil hisaabi formulas mein tabdeel kar deta hai.
+    identifierNamesGenerator: 'mangled-shuffled',
+    renameGlobals: true, // Sab se powerful option
+    numbersToExpressions: true,
+
+    // Layer 6: General Settings
+    compact: true,
+    disableConsoleOutput: true,
+    log: false,
+    seed: 0, // Har baar alag result dega
 };
 
 
@@ -109,10 +126,32 @@ function obfuscateCode() {
 
     try {
         const selectedLevel = securitySlider.value;
-        const options = levels[selectedLevel].options;
-        const obfuscationResult = JavaScriptObfuscator.obfuscate(code, options);
+        const currentOptions = levels[selectedLevel].options;
+
+        // Agar user Qadeer-Lock select kare, to usay domain lock ke baray mein inform karein
+        if (selectedLevel === '3' && currentOptions.domainLock && currentOptions.domainLock.includes('https://Your-Website.com')) {
+             const userDomains = prompt(
+                "QADEER-LOCK SECURITY:\n" +
+                "Yeh script sirf un websites par chalegi jin ka naam aap yahan likhenge.\n" +
+                "Apni website ke naam likhein (e.g., mywebsite.com, another.net).\n" +
+                "Agar multiple hain to comma (,) daal kar likhein.",
+                "my-app.com"
+            );
+
+            if (userDomains) {
+                // User ke input se domains ki list banayein
+                const domainList = userDomains.split(',').map(d => d.trim());
+                // Options mein user ke domains set karein
+                currentOptions.domainLock = domainList;
+            } else {
+                // Agar user cancel kar de, to obfuscation rokein
+                outputCode.value = "// Domain Lock canceled. Obfuscation stopped.";
+                return;
+            }
+        }
         
-        // --- Create Custom Header ---
+        const obfuscationResult = JavaScriptObfuscator.obfuscate(code, currentOptions);
+        
         const now = new Date();
         const dateTimeString = now.toLocaleString('en-PK', { timeZone: 'Asia/Karachi', dateStyle: 'full', timeStyle: 'long' });
         const header = `// By Qadeer khan\n// Protected on: ${dateTimeString}\n// Security Level: ${levels[selectedLevel].label}\n// --- \n`;
@@ -129,7 +168,6 @@ function handleFileSelect(event) {
     if (!file) return;
 
     const reader = new FileReader();
-
     uploadProgress.textContent = 'Uploading... 0%';
     uploadProgress.style.display = 'block';
 
@@ -157,7 +195,6 @@ function handleFileSelect(event) {
 }
 
 // --- Event Listeners ---
-
 document.addEventListener('DOMContentLoaded', () => {
     const initialLevel = securitySlider.value;
     levelValue.textContent = levels[initialLevel].label;
@@ -173,18 +210,37 @@ securitySlider.addEventListener('input', () => {
 obfuscateBtn.addEventListener('click', obfuscateCode);
 
 copyBtn.addEventListener('click', () => {
-    outputCode.select();
-    document.execCommand('copy');
+    if(outputCode.value && !outputCode.value.startsWith("// Please write")){
+        outputCode.select();
+        document.execCommand('copy');
+    }
 });
 
 downloadBtn.addEventListener('click', () => {
+    if (outputCode.value.trim() === '' || outputCode.value.startsWith('// Please write')) {
+        alert("There is no protected code to download. Please obfuscate your code first.");
+        return;
+    }
+    
+    let filename = fileNameInput.value.trim();
+    if (filename === '') {
+        filename = 'protected-script.js';
+    }
+
+    if (!filename.toLowerCase().endsWith('.js')) {
+        filename += '.js';
+    }
+
     const blob = new Blob([outputCode.value], { type: 'application/javascript' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = 'qadeer-protected-script.js';
+    a.download = filename;
+    document.body.appendChild(a);
     a.click();
+    document.body.removeChild(a);
     URL.revokeObjectURL(a.href);
 });
 
 uploadBtn.addEventListener('click', () => fileInput.click());
 fileInput.addEventListener('change', handleFileSelect);
+
