@@ -57,46 +57,40 @@ const hardAdvOptions = {
 // WARNING: Is level se code ka size bohot barh jaye ga, lekin security na-qabil-e-yaqeen had tak mazboot hogi.
 const qadeerUltraOptions = {
     // Layer 1: Anti-Tampering & Debugging
-    // Code ko kholne, format karne ya "DevTools" mein dekhne ki koshish karne par
-    // browser ko hang kar dega ya crash kar dega.
     selfDefending: true,
     debugProtection: true,
     debugProtectionInterval: 0, // 0 = Infinite loop on debug
 
     // Layer 2: Logic Obfuscation
-    // Code ke asal logic ko hazaron be-matlab code blocks aur
-    // uljhay hue raaston (control flow) ke andar chupa deta hai.
     controlFlowFlattening: true,
     controlFlowFlatteningThreshold: 1, // Max Power
     deadCodeInjection: true,
     deadCodeInjectionThreshold: 1, // Max Power
 
     // Layer 3: Unreadable Code Generation
-    // Tamam text, variables, aur numbers ko aesi shaklon mein tabdeel kar deta hai jinhe parhna na-mumkin ho.
     stringArray: true,
     stringArrayEncoding: ['rc4'], // Strongest encoding
     stringArrayThreshold: 1,
     stringArrayRotate: true,
-    stringArrayWrappersCount: 30,         // Bohat zyada wrappers
+    stringArrayWrappersCount: 30,
     stringArrayWrappersParametersMaxCount: 30,
     stringArrayWrappersChained: true,
     stringArrayWrappersType: 'function',
     transformObjectKeys: true,
     splitStrings: true,
     splitStringsChunkLength: 2,
-    unicodeEscapeSequence: true, // Sab kuch unicode mein badal dega (bohot powerful)
+    unicodeEscapeSequence: true,
 
     // Layer 4: Variable & Number Obfuscation
-    // Tamam variable names ko badal deta hai aur numbers ko mushkil hisaabi formulas mein tabdeel kar deta hai.
-    identifierNamesGenerator: 'mangled-shuffled', // Hardest name generator
-    renameGlobals: true, // ⚠️ WARNING: Sab se powerful lekin code break kar sakta hai agar ग़ਲਤ istemal ho.
+    identifierNamesGenerator: 'mangled-shuffled',
+    renameGlobals: true,
     numbersToExpressions: true,
 
     // Layer 5: General Settings
     compact: true,
     disableConsoleOutput: true,
     log: false,
-    seed: 0, // Har baar alag result dega
+    seed: 0,
 };
 
 
@@ -183,6 +177,29 @@ function handleFileSelect(event) {
     reader.readAsText(file);
 }
 
+// --- NEW FUNCTION: Password Check ---
+function handleProtectClick() {
+    // The password is "hidden" here. In a real-world website, this isn't secure,
+    // but for this tool, it works as requested.
+    const correctPassword = "POWER OF QADEER";
+    
+    const enteredPassword = prompt("Please enter the password to protect the code:");
+
+    if (enteredPassword === null) {
+        // User clicked "Cancel", so we do nothing.
+        return;
+    }
+
+    if (enteredPassword === correctPassword) {
+        // If password is correct, run the obfuscator
+        obfuscateCode();
+    } else {
+        // If password is wrong, show an error
+        alert("Incorrect Password. Access Denied.");
+    }
+}
+
+
 // --- Event Listeners ---
 document.addEventListener('DOMContentLoaded', () => {
     const initialLevel = securitySlider.value;
@@ -196,7 +213,8 @@ securitySlider.addEventListener('input', () => {
     updateDots(level);
 });
 
-obfuscateBtn.addEventListener('click', obfuscateCode);
+// MODIFIED: This now calls the password check function first
+obfuscateBtn.addEventListener('click', handleProtectClick);
 
 copyBtn.addEventListener('click', () => {
     if (outputCode.value && !outputCode.value.startsWith("// Please write")) {
