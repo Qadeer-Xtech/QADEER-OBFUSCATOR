@@ -1,353 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>QADEER MAX SECURITY Obfuscator</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/javascript-obfuscator/dist/index.browser.js"></script>
-  <style>
-    /* --- Global Styles & Reset --- */
-    :root {
-      --primary-color: #007bff;
-      --secondary-color: #6c757d;
-      --background-color: #f0f2f5;
-      --box-background: #ffffff;
-      --text-color: #333;
-      --border-color: #dee2e6;
-      --success-color: #28a745;
-      --light-text: #6c757d;
-      --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-      --border-radius: 12px;
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    html, body {
-      height: 100%;
-      font-family: 'Montserrat', sans-serif;
-      background-color: var(--background-color);
-      color: var(--text-color);
-    }
-
-    body {
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      line-height: 1.6;
-    }
-
-    /* --- Header --- */
-    .header-gradient {
-      background: linear-gradient(90deg, #1a237e, #007bff);
-      color: white;
-      text-align: center;
-      padding: 1.5rem 1rem;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-
-    .main-title {
-      font-size: 2.5rem;
-      font-weight: 700;
-      letter-spacing: 1.5px;
-      text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
-    }
-
-    /* --- Main Content --- */
-    main {
-      flex: 1; /* Allows main to grow and fill available space */
-      display: flex;
-      justify-content: center;
-      align-items: flex-start; /* Align boxes to the top */
-      gap: 2rem;
-      padding: 2rem 1rem;
-      width: 100%;
-    }
-
-    /* --- Content Boxes --- */
-    .box {
-      background: var(--box-background);
-      padding: 2rem;
-      border-radius: var(--border-radius);
-      box-shadow: var(--box-shadow);
-      width: 100%;
-      max-width: 600px; /* Max width for each box */
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
-
-    .section-title {
-      font-size: 1.5rem;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      border-bottom: 2px solid var(--border-color);
-      padding-bottom: 0.75rem;
-    }
-
-    .icon {
-      font-size: 1.8rem;
-    }
-
-    /* --- Code Areas --- */
-    .code-area {
-      width: 100%;
-      min-height: 300px;
-      padding: 1rem;
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      font-family: monospace;
-      font-size: 1rem;
-      resize: vertical;
-      background-color: #f8f9fa;
-    }
-
-    .code-area.readonly {
-      background-color: #e9ecef;
-      cursor: not-allowed;
-    }
-
-    /* --- Security Slider --- */
-    .slider-row {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-    
-    .security-label {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-weight: 500;
-    }
-
-    .level-badge {
-      background-color: var(--primary-color);
-      color: white;
-      padding: 0.25rem 0.75rem;
-      border-radius: 16px;
-      font-size: 0.8rem;
-      font-weight: 700;
-    }
-
-    input[type="range"] {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 100%;
-      height: 8px;
-      background: var(--border-color);
-      border-radius: 5px;
-      outline: none;
-      opacity: 0.7;
-      transition: opacity .2s;
-    }
-    input[type="range"]:hover {
-      opacity: 1;
-    }
-    input[type="range"]::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 20px;
-      height: 20px;
-      background: var(--primary-color);
-      border-radius: 50%;
-      cursor: pointer;
-    }
-    input[type="range"]::-moz-range-thumb {
-      width: 20px;
-      height: 20px;
-      background: var(--primary-color);
-      border-radius: 50%;
-      cursor: pointer;
-    }
-
-    .level-desc {
-        display: flex;
-        justify-content: space-between;
-        font-size: 0.8rem;
-        color: var(--light-text);
-        padding: 0 5px;
-    }
-
-    /* --- Buttons and Inputs --- */
-    .main-actions, .output-btn-row, .download-row {
-      display: flex;
-      gap: 1rem;
-    }
-
-    .js-btn, .secondary-btn {
-      flex-grow: 1;
-      border: none;
-      padding: 0.8rem 1.5rem;
-      border-radius: 8px;
-      font-size: 1rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      text-align: center;
-    }
-
-    .js-btn {
-      background-color: var(--primary-color);
-      color: white;
-    }
-    .js-btn:hover {
-      background-color: #0056b3;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-    }
-    
-    .secondary-btn {
-      background-color: #f8f9fa;
-      color: var(--text-color);
-      border: 1px solid var(--border-color);
-    }
-    .secondary-btn:hover {
-      background-color: #e9ecef;
-    }
-
-    .filename-input {
-      flex-grow: 1;
-      padding: 0.75rem;
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      font-size: 1rem;
-    }
-
-    /* --- Footer --- */
-    footer {
-      background: #fff;
-      text-align: center;
-      padding: 1.5rem 1rem;
-      border-top: 1px solid var(--border-color);
-      width: 100%;
-      margin-top: auto; /* Push footer to the bottom */
-    }
-
-    .footer-links {
-      display: flex;
-      justify-content: center;
-      gap: 2rem;
-      margin-bottom: 1rem;
-    }
-
-    .footer-btn {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      text-decoration: none;
-      color: var(--text-color);
-      font-weight: 500;
-      transition: color 0.2s;
-    }
-    .footer-btn:hover {
-      color: var(--primary-color);
-    }
-
-    .footer-icon {
-      width: 32px;
-      height: 32px;
-    }
-
-    .copyright {
-      font-size: 0.9rem;
-      color: var(--light-text);
-    }
-    
-    /* Hide file input */
-    #fileInput {
-      display: none;
-    }
-    
-    /* --- Responsive Design --- */
-    @media (max-width: 992px) {
-      main {
-        flex-direction: column;
-        align-items: center; /* Center boxes vertically */
-      }
-    }
-    
-    @media (max-width: 768px) {
-      .main-title {
-        font-size: 2rem;
-      }
-      .main-actions, .download-row {
-          flex-direction: column;
-      }
-    }
-
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Codewave Obfuscator</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/obfuscate.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
-  <header class="header-gradient">
-    <h1 class="main-title">QADEER MAX SECURITY</h1>
-  </header>
-  
-  <main>
-    <section class="box">
-      <h2 class="section-title"><span class="icon">💻</span> Input JavaScript Code</h2>
-      <textarea id="inputCode" class="code-area" placeholder="Enter your JavaScript code here..."></textarea>
+    <div class="container-fluid">
+        <header class="text-center py-4">
+            <h1 class="display-4"><i class="fas fa-code me-2"></i>Qadeer Obfuscator</h1>
+            <p class="lead">Protect your source code with our obfuscation tool</p>
+        </header>
 
-      <div class="slider-row">
-        <div class="security-label">
-          <span>Security Level</span>
-          <span id="levelValue" class="level-badge">ADVANCED</span>
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="card shadow-lg">
+                    <div class="card-header">
+                        <ul class="nav nav-tabs card-header-tabs" id="codeTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="js-tab" data-bs-toggle="tab" data-bs-target="#js" type="button" role="tab">JavaScript</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="html-tab" data-bs-toggle="tab" data-bs-target="#html" type="button" role="tab">HTML</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="css-tab" data-bs-toggle="tab" data-bs-target="#css" type="button" role="tab">CSS</button>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="tab-content" id="codeTabsContent">
+                            <div class="tab-pane fade show active" id="js" role="tabpanel">
+                                <div class="mb-3">
+                                    <label for="jsCode" class="form-label">JavaScript Code</label>
+                                    <textarea class="form-control code-input" id="jsCode" rows="10" placeholder="Paste your JavaScript code here..."></textarea>
+                                </div>
+                                <div class="d-flex justify-content-between mb-3">
+                                    <div>
+                                        <button class="btn btn-primary" id="jsFileBtn">
+                                            <i class="fas fa-file-upload me-1"></i> Upload JS File
+                                        </button>
+                                        <input type="file" id="jsFileInput" accept=".js" style="display: none;">
+                                    </div>
+                                    <div>
+                                        <button class="btn btn-success" id="obfuscateJsBtn">
+                                            <i class="fas fa-lock me-1"></i> Obfuscate
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="html" role="tabpanel">
+                                <div class="mb-3">
+                                    <label for="htmlCode" class="form-label">HTML Code</label>
+                                    <textarea class="form-control code-input" id="htmlCode" rows="10" placeholder="Paste your HTML code here..."></textarea>
+                                </div>
+                                <div class="d-flex justify-content-between mb-3">
+                                    <div>
+                                        <button class="btn btn-primary" id="htmlFileBtn">
+                                            <i class="fas fa-file-upload me-1"></i> Upload HTML File
+                                        </button>
+                                        <input type="file" id="htmlFileInput" accept=".html,.htm" style="display: none;">
+                                    </div>
+                                    <div>
+                                        <button class="btn btn-success" id="minifyHtmlBtn">
+                                            <i class="fas fa-compress-alt me-1"></i> Minify
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="css" role="tabpanel">
+                                <div class="mb-3">
+                                    <label for="cssCode" class="form-label">CSS Code</label>
+                                    <textarea class="form-control code-input" id="cssCode" rows="10" placeholder="Paste your CSS code here..."></textarea>
+                                </div>
+                                <div class="d-flex justify-content-between mb-3">
+                                    <div>
+                                        <button class="btn btn-primary" id="cssFileBtn">
+                                            <i class="fas fa-file-upload me-1"></i> Upload CSS File
+                                        </button>
+                                        <input type="file" id="cssFileInput" accept=".css" style="display: none;">
+                                    </div>
+                                    <div>
+                                        <button class="btn btn-success" id="minifyCssBtn">
+                                            <i class="fas fa-compress-alt me-1"></i> Minify
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4">
+                            <label for="outputCode" class="form-label">Output</label>
+                            <textarea class="form-control code-output" id="outputCode" rows="10" readonly placeholder="Your obfuscated/minified code will appear here..."></textarea>
+                            <div class="d-flex justify-content-end mt-3">
+                                <button class="btn btn-outline-secondary me-2" id="copyBtn">
+                                    <i class="fas fa-copy me-1"></i> Copy
+                                </button>
+                                <button class="btn btn-primary" id="downloadBtn">
+                                    <i class="fas fa-download me-1"></i> Download
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <input type="range" id="securitySlider" min="1" max="3" value="1" />
-        <div class="level-desc">
-          <span>Advanced</span>
-          <span>Hard-Adv</span>
-          <span>QADEER-LOCK</span>
-        </div>
-      </div>
-      
-      <div class="main-actions">
-        <button id="uploadBtn" class="secondary-btn">Upload File</button>
-        <button id="obfuscateBtn" class="js-btn">🛡️ Protect My Code</button>
-      </div>
-      
-      <input type="file" id="fileInput" accept=".js,.txt" />
-      
-      <div id="uploadProgress" class="upload-status" style="display: none;"></div>
-    </section>
 
-    <section class="box">
-      <h2 class="section-title"><span class="icon">🔒</span> Protected Code Output</h2>
-      
-      <textarea id="outputCode" class="code-area readonly" readonly placeholder="Your protected JavaScript code will appear here..."></textarea>
-
-      <div class="output-btn-row">
-        <button id="copyBtn" class="secondary-btn">Copy Code</button>
-      </div>
-
-      <div class="download-row">
-          <input type="text" id="fileNameInput" class="filename-input" placeholder="protected-script.js" />
-          <button id="downloadBtn" class="secondary-btn">Download File</button>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    <div class="footer-links">
-      <a href="https://github.com/Qadeer-Xtech" class="footer-btn" target="_blank" rel="noopener">
-        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" alt="GitHub" class="footer-icon"/>
-        <span>GitHub</span>
-      </a>
-      <a href="https://whatsapp.com/channel/0029Vaw6yRaBPzjZPtVtA80A" class="footer-btn" target="_blank" rel="noopener">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" class="footer-icon"/>
-        <span>WhatsApp Channel</span>
-      </a>
+        <footer class="text-center py-4 mt-4">
+            <p class="mb-0">QADEER-OBFUSCATOR TOOL</p>
+            <div class="mt-2">
+                <button class="btn btn-sm btn-outline-secondary" id="themeToggle">
+                    <i class="fas fa-moon me-1"></i> Dark Mode
+                </button>
+            </div>
+        </footer>
     </div>
-    <p class="copyright">
-      © 2025 Qadeer Obfuscation. All rights reserved.
-    </p>
-  </footer>
 
-  <script src="script.js"></script> </body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/javascript-obfuscator/dist/index.browser.js"></script>
+    <script src="../server/obfuscate.js"></script>
+        <script>
+    window.SITE_CLOSED = false; // Set to false to hide
+</script>
+<script src="../ads/pageclose.js"> </script>
+  </body>
 </html>
