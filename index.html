@@ -59,10 +59,10 @@
 
     /* --- Main Content --- */
     main {
-      flex: 1;
+      flex: 1; /* Allows main to grow and fill available space */
       display: flex;
       justify-content: center;
-      align-items: flex-start;
+      align-items: flex-start; /* Align boxes to the top */
       gap: 2rem;
       padding: 2rem 1rem;
       width: 100%;
@@ -75,7 +75,7 @@
       border-radius: var(--border-radius);
       box-shadow: var(--box-shadow);
       width: 100%;
-      max-width: 600px;
+      max-width: 600px; /* Max width for each box */
       display: flex;
       flex-direction: column;
       gap: 1.5rem;
@@ -227,7 +227,7 @@
       padding: 1.5rem 1rem;
       border-top: 1px solid var(--border-color);
       width: 100%;
-      margin-top: auto;
+      margin-top: auto; /* Push footer to the bottom */
     }
 
     .footer-links {
@@ -260,6 +260,7 @@
       color: var(--light-text);
     }
     
+    /* Hide file input */
     #fileInput {
       display: none;
     }
@@ -268,7 +269,7 @@
     @media (max-width: 992px) {
       main {
         flex-direction: column;
-        align-items: center;
+        align-items: center; /* Center boxes vertically */
       }
     }
     
@@ -296,15 +297,16 @@
       <div class="slider-row">
         <div class="security-label">
           <span>Security Level</span>
-          <span id="levelValue" class="level-badge">ULTRA</span>
+          <span id="levelValue" class="level-badge">ADVANCED</span>
         </div>
-        <input type="range" id="securitySlider" min="1" max="3" value="2" />
+        <input type="range" id="securitySlider" min="1" max="3" value="1" />
         <div class="level-desc">
           <span>Advanced</span>
-          <span>Ultra</span>
-          <span>Nuclear-Lock</span>
+          <span>Hard-Adv</span>
+          <span>QADEER-LOCK</span>
         </div>
       </div>
+      
       <div class="main-actions">
         <button id="uploadBtn" class="secondary-btn">Upload File</button>
         <button id="obfuscateBtn" class="js-btn">🛡️ Protect My Code</button>
@@ -347,6 +349,5 @@
     </p>
   </footer>
 
-  <script src="script.js"></script>
-</body>
+  <script src="script.js"></script> </body>
 </html>
